@@ -148,19 +148,23 @@ pipeline {
             }
         }
         stage('Build') { 
-            steps { 
-                sh 'mvn -B package -DskypTests' 
+            steps {
+                dir("spring-petclinic"){
+                    sh 'mvn -B package -DskypTests' 
+                }
             }
         }
         stage('Test'){
             steps {
-                sh 'mvn -B test'
+                dir("spring-petclinic"){
+                    sh 'mvn -B test'
+                }
             }
         }
     }
     post {
         always {
-            cleanWs()
+            deleteDir()
         }
         success {
             archiveArtifacts artifacts: '**/*.war'
